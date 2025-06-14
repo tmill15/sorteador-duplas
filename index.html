@@ -645,10 +645,18 @@
                 container.innerHTML = '<div class="empty-state">Os participantes já sorteados aparecerão aqui.</div>';
             } else {
                 container.innerHTML = drawnParticipants.map(participant => `
-                    <div class="drawn-participant">
-                        ${participant}
+                    <div class="drawn-participant" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 20px;">
+                        <span style="flex: 1;">${participant}</span>
+                        <button class="btn btn-danger" onclick="removeFromDrawnList('${participant}')" style="padding: 5px 10px; font-size: 0.9rem; width: 40px; height: 32px; min-width: 40px; flex-shrink: 0; margin-left: 10px;">
+                            <i data-lucide="x"></i>
+                        </button>
                     </div>
                 `).join('');
+                
+                // Recriar ícones após atualizar o DOM
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
             }
         }
 
@@ -757,6 +765,22 @@
             updateAll();
             clearCurrentMatch();
             clearCompletionNotice();
+        }
+
+        function removeFromDrawnList(participantName) {
+            if (!confirm(`Tem certeza que deseja retirar "${participantName}" da lista de sorteados?\n\nEle poderá ser sorteado novamente antes dos outros.`)) {
+                return;
+            }
+            
+            drawnParticipants = drawnParticipants.filter(p => p !== participantName);
+            saveData(); // Salvar dados
+            updateAll();
+            
+            // Se o confronto atual incluía este participante da lista de sorteados, limpar o confronto
+            if (currentMatch && currentMatch.fromDrawnList && currentMatch.fromDrawnList.includes(participantName)) {
+                clearCurrentMatch();
+                clearCompletionNotice();
+            }
         }
 
         function clearDrawnParticipants() {
