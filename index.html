@@ -495,6 +495,18 @@
                     <i data-lucide="users"></i> Dados de Exemplo
                 </button>
             </div>
+
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px;">
+                <button class="btn btn-primary" onclick="exportParticipants()" style="flex: 1; min-width: 150px;">
+                    <i data-lucide="download"></i> Exportar Lista
+                </button>
+                <button class="btn btn-primary" onclick="importParticipants()" style="flex: 1; min-width: 150px;">
+                    <i data-lucide="upload"></i> Importar Lista
+                </button>
+            </div>
+
+            <!-- Input file oculto para importação -->
+            <input type="file" id="importFileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
         </div>
 
         <!-- Aba Sorteados -->
@@ -730,6 +742,99 @@
             participants = [...sampleNames];
             saveData(); // Salvar dados
             updateAll();
+        }
+
+        function exportParticipants() {
+            if (participants.length === 0) {
+                alert('Não há participantes para exportar!');
+                return;
+            }
+
+            const data = {
+                participants: participants,
+                drawnParticipants: drawnParticipants,
+                exportDate: new Date().toISOString(),
+                version: '1.0'
+            };
+
+            const dataStr = JSON.stringify(data, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `participantes_sorteio_${new Date().toISOString().split('T')[0]}.json`;
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            URL.revokeObjectURL(link.href);
+            
+            alert(`Lista exportada com sucesso!\n${participants.length} participantes salvos.`);
+        }
+
+        function importParticipants() {
+            const fileInput = document.getElementById('importFileInput');
+            fileInput.click();
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.type !== 'application/json') {
+                alert('Por favor, selecione um arquivo JSON válido!');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    
+                    // Validar estrutura do arquivo
+                    if (!data.participants || !Array.isArray(data.participants)) {
+                        throw new Error('Formato de arquivo inválido: propriedade "participants" não encontrada ou não é um array.');
+                    }
+
+                    // Validar se todos os participantes são strings
+                    if (!data.participants.every(p => typeof p === 'string' && p.trim().length > 0)) {
+                        throw new Error('Formato de arquivo inválido: todos os participantes devem ser strings não vazias.');
+                    }
+
+                    // Confirmar importação se já existem participantes
+                    if (participants.length > 0) {
+                        const confirmMessage = `Você já possui ${participants.length} participante(s).\n\nO que deseja fazer?\n\n- OK: Substituir lista atual\n- Cancelar: Manter lista atual`;
+                        if (!confirm(confirmMessage)) {
+                            return;
+                        }
+                    }
+
+                    // Importar dados
+                    participants = [...data.participants];
+                    drawnParticipants = data.drawnParticipants && Array.isArray(data.drawnParticipants) ? [...data.drawnParticipants] : [];
+                    
+                    // Validar consistência: participantes sorteados devem estar na lista principal
+                    drawnParticipants = drawnParticipants.filter(p => participants.includes(p));
+                    
+                    currentMatch = null; // Limpar confronto atual
+                    
+                    saveData(); // Salvar dados importados
+                    updateAll();
+                    clearCurrentMatch();
+                    clearCompletionNotice();
+                    
+                    alert(`Lista importada com sucesso!\n${participants.length} participantes carregados.`);
+                    
+                } catch (error) {
+                    alert(`Erro ao importar arquivo:\n${error.message}\n\nVerifique se o arquivo foi exportado corretamente pelo sistema.`);
+                }
+            };
+            
+            reader.readAsText(file);
+            
+            // Limpar o input para permitir reimportar o mesmo arquivo
+            event.target.value = '';
         }
 
         function generateSingleMatch() {
