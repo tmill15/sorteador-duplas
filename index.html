@@ -13,7 +13,7 @@
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 180 180%22><rect width=%22180%22 height=%22180%22 fill=%22%234facfe%22 rx=%2220%22/><text x=%2290%22 y=%22130%22 font-size=%22120%22 text-anchor=%22middle%22>🏖️</text></svg>">
     
     <!-- PWA Meta Tags -->
-    <meta name="theme-color" content="#4facfe">
+    <meta name="theme-color" content="#667eea" id="theme-color-meta">
     <meta name="description" content="Aplicativo para sorteio de duplas no Beach Tennis">
     
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -570,6 +570,18 @@
             localStorage.removeItem('sorteador_drawnParticipants');
         }
 
+        // Função para ajustar a cor do tema PWA
+        function updateThemeColor() {
+            const themeColorMeta = document.getElementById('theme-color-meta');
+            const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            if (isDarkMode) {
+                themeColorMeta.setAttribute('content', '#2c3e50'); // Cor do gradiente escuro
+            } else {
+                themeColorMeta.setAttribute('content', '#667eea'); // Cor do gradiente claro
+            }
+        }
+
         // Aguarda o carregamento do Lucide
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof lucide !== 'undefined') {
@@ -577,6 +589,10 @@
             }
             loadData(); // Carregar dados salvos
             updateAll();
+            updateThemeColor(); // Ajustar cor do tema PWA
+            
+            // Escutar mudanças no esquema de cores
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeColor);
         });
 
         function switchTab(tabName) {
