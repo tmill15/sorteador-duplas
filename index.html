@@ -6,6 +6,38 @@
     <title>Sorteio de Confrontos</title>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --container-bg: rgba(255, 255, 255, 0.95);
+            --header-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --text-primary: #333;
+            --text-secondary: #6c757d;
+            --text-muted: #495057;
+            --bg-light: #f8f9fa;
+            --border-light: #e9ecef;
+            --border-color: #e1e5e9;
+            --card-bg: white;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --shadow-card: rgba(0, 0, 0, 0.05);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+                --container-bg: rgba(45, 55, 72, 0.95);
+                --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                --text-primary: #e2e8f0;
+                --text-secondary: #a0aec0;
+                --text-muted: #cbd5e0;
+                --bg-light: #2d3748;
+                --border-light: #4a5568;
+                --border-color: #4a5568;
+                --card-bg: #1a202c;
+                --shadow-color: rgba(0, 0, 0, 0.3);
+                --shadow-card: rgba(0, 0, 0, 0.2);
+            }
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -14,22 +46,23 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--bg-gradient);
             min-height: 100vh;
             padding: 20px;
+            color: var(--text-primary);
         }
 
         .container {
             max-width: 900px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--container-bg);
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 20px 40px var(--shadow-color);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: var(--header-gradient);
             color: white;
             text-align: center;
             padding: 30px;
@@ -48,8 +81,8 @@
 
         .tabs {
             display: flex;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
+            background: var(--bg-light);
+            border-bottom: 1px solid var(--border-light);
         }
 
         .tab {
@@ -58,7 +91,7 @@
             text-align: center;
             cursor: pointer;
             font-weight: 600;
-            color: #495057;
+            color: var(--text-muted);
             border: none;
             background: none;
             transition: all 0.3s ease;
@@ -69,13 +102,13 @@
         }
 
         .tab.active {
-            background: white;
+            background: var(--card-bg);
             color: #4facfe;
             border-bottom: 3px solid #4facfe;
         }
 
         .tab:hover:not(.active) {
-            background: #e9ecef;
+            background: var(--border-light);
         }
 
         .tab-content {
@@ -92,7 +125,7 @@
         }
 
         .input-section h2 {
-            color: #333;
+            color: var(--text-primary);
             margin-bottom: 15px;
             font-size: 1.3rem;
             display: flex;
@@ -109,10 +142,12 @@
         input[type="text"] {
             flex: 1;
             padding: 12px 15px;
-            border: 2px solid #e1e5e9;
+            border: 2px solid var(--border-color);
             border-radius: 10px;
             font-size: 1rem;
             transition: all 0.3s ease;
+            background: var(--card-bg);
+            color: var(--text-primary);
         }
 
         input[type="text"]:focus {
@@ -146,13 +181,13 @@
         }
 
         .btn-secondary {
-            background: #f8f9fa;
-            color: #495057;
-            border: 2px solid #e9ecef;
+            background: var(--bg-light);
+            color: var(--text-muted);
+            border: 2px solid var(--border-light);
         }
 
         .btn-secondary:hover {
-            background: #e9ecef;
+            background: var(--border-light);
             transform: translateY(-1px);
         }
 
@@ -187,7 +222,7 @@
         }
 
         .participants-list {
-            background: #f8f9fa;
+            background: var(--bg-light);
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 20px;
@@ -198,16 +233,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: white;
+            background: var(--card-bg);
             padding: 10px 15px;
             margin: 5px 0;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 2px 4px var(--shadow-card);
         }
 
         .participant-name {
             font-weight: 500;
-            color: #333;
+            color: var(--text-primary);
         }
 
         .results-section {
@@ -282,11 +317,11 @@
         }
 
         .stat-card {
-            background: #f8f9fa;
+            background: var(--bg-light);
             padding: 20px;
             border-radius: 10px;
             text-align: center;
-            border: 2px solid #e9ecef;
+            border: 2px solid var(--border-light);
         }
 
         .stat-number {
@@ -298,15 +333,42 @@
 
         .stat-label {
             font-size: 0.9rem;
-            color: #6c757d;
+            color: var(--text-secondary);
             font-weight: 600;
         }
 
         .empty-state {
             text-align: center;
-            color: #6c757d;
+            color: var(--text-secondary);
             font-style: italic;
             padding: 20px;
+        }
+
+        .clear-shortcut {
+            background: linear-gradient(135deg, #ffa726 0%, #ff7043 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            width: 100%;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .clear-shortcut:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 167, 38, 0.3);
+        }
+
+        .clear-shortcut .hint {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 5px;
+            font-weight: 400;
         }
 
         .completion-notice {
@@ -369,7 +431,7 @@
     <div class="container">
         <div class="header">
             <h1>🏖️ Sorteio de Confrontos</h1>
-            <p>Sorteie confrontos entre duplas, um por vez!</p>
+            <p>Sorteio de duplas - Beach Tennis</p>
         </div>
         
         <div class="tabs">
@@ -399,6 +461,8 @@
                 <div id="currentMatchContainer"></div>
                 
                 <div id="completionNotice"></div>
+                
+                <div id="clearShortcut"></div>
             </div>
         </div>
 
@@ -433,10 +497,10 @@
             </div>
         </div>
 
-        <!-- Aba Já Sorteados -->
+        <!-- Aba Sorteados -->
         <div class="tab-content" id="drawn-tab">
             <div class="results-section">
-                <h2 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                <h2 style="color: var(--text-primary); margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
                     <i data-lucide="award"></i>
                     Participantes Já Sorteados
                 </h2>
@@ -545,6 +609,7 @@
         function updateMatchStats() {
             const container = document.getElementById('matchStats');
             const generateBtn = document.getElementById('generateBtn');
+            const clearShortcutContainer = document.getElementById('clearShortcut');
             const availableCount = participants.filter(p => !drawnParticipants.includes(p)).length;
             const totalParticipants = participants.length;
             
@@ -565,6 +630,18 @@
             
             generateBtn.disabled = !canGenerate;
             generateBtn.innerHTML = `<i data-lucide="shuffle"></i> ${buttonText}`;
+            
+            // Mostrar atalho para limpar lista quando todos estão sorteados e não é possível sortear
+            if (!canGenerate && totalParticipants >= 4 && drawnParticipants.length > 0) {
+                clearShortcutContainer.innerHTML = `
+                    <button class="clear-shortcut" onclick="switchTab('drawn')">
+                        <i data-lucide="arrow-right"></i> Ir para Sorteados e Limpar Lista
+                        <div class="hint">💡 Limpe a lista para sortear novamente</div>
+                    </button>
+                `;
+            } else {
+                clearShortcutContainer.innerHTML = '';
+            }
             
             // Removido o card "Confronto Atual" que sempre mostrava 1
             container.innerHTML = `
