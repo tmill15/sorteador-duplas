@@ -647,8 +647,8 @@
                 container.innerHTML = drawnParticipants.map(participant => `
                     <div class="drawn-participant" style="display: flex; align-items: center; justify-content: space-between; padding: 15px 20px;">
                         <span style="flex: 1;">${participant}</span>
-                        <button class="btn btn-danger" onclick="removeFromDrawnList('${participant}')" style="padding: 5px 10px; font-size: 0.9rem; width: 40px; height: 32px; min-width: 40px; flex-shrink: 0; margin-left: 10px;">
-                            <i data-lucide="x"></i>
+                        <button class="btn btn-primary" onclick="removeFromDrawnList('${participant}')" style="padding: 5px 10px; font-size: 0.9rem; width: 40px; height: 32px; min-width: 40px; flex-shrink: 0; margin-left: 10px;">
+                            <i data-lucide="undo"></i>
                         </button>
                     </div>
                 `).join('');
