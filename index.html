@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorteio de Confrontos</title>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -44,26 +44,12 @@
             box-sizing: border-box;
         }
 
-        html {
-            height: 100%;
-            background: var(--bg-gradient);
-        }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-gradient);
-            height: 100%;
-            min-height: 100vh;
-            min-height: 100dvh;
-            margin: 0;
-            padding: 0;
-            color: var(--text-primary);
-            position: relative;
-        }
-
-        .page-wrapper {
             min-height: 100vh;
             padding: 20px;
+            color: var(--text-primary);
         }
 
         .container {
@@ -442,8 +428,7 @@
     </style>
 </head>
 <body>
-    <div class="page-wrapper">
-        <div class="container">
+    <div class="container">
         <div class="header">
             <h1>🏖️ Sorteio de Confrontos</h1>
             <p>Sorteio de duplas - Beach Tennis</p>
@@ -530,7 +515,6 @@
                 </button>
             </div>
         </div>
-    </div>
     </div>
 
     <script>
