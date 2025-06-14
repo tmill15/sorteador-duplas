@@ -1,331 +1,444 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sorteio de Duplas</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide-react/0.263.1/lucide-react.min.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-section h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #495057;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66 0%, #40c057 100%);
+            color: white;
+            font-size: 1.2rem;
+            padding: 15px 30px;
+            width: 100%;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(81, 207, 102, 0.3);
+        }
+
+        .participants-list {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 100px;
+        }
+
+        .participant-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 10px 15px;
+            margin: 5px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .participant-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .results-section {
+            margin-top: 30px;
+        }
+
+        .pairs-container {
+            display: grid;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .pair-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .pair-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+
+        .pair-members {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .leftover {
+            background: linear-gradient(135deg, #ffa726 0%, #ff7043 100%);
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .input-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div class="container">
+        <div class="header">
+            <h1>🎲 Sorteio de Duplas</h1>
+            <p>Organize suas duplas de forma rápida e justa!</p>
+        </div>
 
-```
-<script type="text/babel">
-    const { useState, useEffect, useRef } = React;
-    const { Users, Shuffle, Plus, Trash2, RotateCcw, Upload, FileText } = lucide;
+        <div class="content">
+            <div class="input-section">
+                <h2>
+                    <i data-lucide="users"></i>
+                    Adicionar Participantes
+                </h2>
+                <div class="input-group">
+                    <input type="text" id="participantInput" placeholder="Digite o nome do participante..." maxlength="50">
+                    <button class="btn btn-primary" onclick="addParticipant()">
+                        <i data-lucide="plus"></i> Adicionar
+                    </button>
+                </div>
+            </div>
 
-    const SorteioDuplas = () => {
-        const [participantes, setParticipantes] = useState([]);
-        const [participantesSorteados, setParticipantesSorteados] = useState([]);
-        const [novoParticipante, setNovoParticipante] = useState('');
-        const [duplaAtual, setDuplaAtual] = useState(null);
-        const [historicoDuplas, setHistoricoDuplas] = useState([]);
-        const [rodadaAtual, setRodadaAtual] = useState(1);
-        const [isAnimating, setIsAnimating] = useState(false);
-        const fileInputRef = useRef(null);
+            <div class="participants-list" id="participantsList">
+                <div class="empty-state">
+                    Nenhum participante adicionado ainda. Comece digitando um nome acima!
+                </div>
+            </div>
 
-        // Função para adicionar participante
-        const adicionarParticipante = () => {
-            if (novoParticipante.trim() && !participantes.includes(novoParticipante.trim())) {
-                setParticipantes([...participantes, novoParticipante.trim()]);
-                setNovoParticipante('');
-            }
-        };
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" onclick="clearAll()" style="flex: 1; min-width: 150px;">
+                    <i data-lucide="trash-2"></i> Limpar Tudo
+                </button>
+                <button class="btn btn-secondary" onclick="addSampleData()" style="flex: 1; min-width: 150px;">
+                    <i data-lucide="users"></i> Dados de Exemplo
+                </button>
+            </div>
 
-        // Função para importar lista de arquivo
-        const importarLista = (event) => {
-            const file = event.target.files[0];
-            if (!file) return;
+            <button class="btn btn-success" onclick="generatePairs()" id="generateBtn" disabled>
+                <i data-lucide="shuffle"></i> Sortear Duplas
+            </button>
 
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const text = e.target.result;
-                const nomes = text
-                    .split(/[\n,;]/)
-                    .map(nome => nome.trim())
-                    .filter(nome => nome.length > 0);
-                
-                const nomesUnicos = [...new Set([...participantes, ...nomes])];
-                setParticipantes(nomesUnicos);
-            };
-            reader.readAsText(file);
-            
-            // Reset do input para permitir importar o mesmo arquivo novamente
-            event.target.value = '';
-        };
-
-        // Função para remover participante
-        const removerParticipante = (nome) => {
-            setParticipantes(participantes.filter(p => p !== nome));
-        };
-
-        // Função para sortear dupla
-        const sortearDupla = () => {
-            if (participantes.length < 2) return;
-
-            setIsAnimating(true);
-            
-            setTimeout(() => {
-                const participantesDisponiveis = [...participantes];
-                const pessoa1 = participantesDisponiveis[Math.floor(Math.random() * participantesDisponiveis.length)];
-                const restantes = participantesDisponiveis.filter(p => p !== pessoa1);
-                const pessoa2 = restantes[Math.floor(Math.random() * restantes.length)];
-                
-                const novaDupla = { pessoa1, pessoa2, rodada: rodadaAtual };
-                setDuplaAtual(novaDupla);
-                setHistoricoDuplas([...historicoDuplas, novaDupla]);
-                
-                // Remove as pessoas sorteadas da lista principal
-                const novosParticipantes = participantes.filter(p => p !== pessoa1 && p !== pessoa2);
-                setParticipantes(novosParticipantes);
-                
-                // Adiciona às pessoas já sorteadas
-                setParticipantesSorteados([...participantesSorteados, pessoa1, pessoa2]);
-                
-                setIsAnimating(false);
-            }, 1500);
-        };
-
-        // Função para verificar se precisa de nova rodada
-        const verificarNovaRodada = () => {
-            if (participantes.length === 0 && participantesSorteados.length > 0) {
-                if (participantesSorteados.length < 4) {
-                    // Última rodada - pegar pessoas aleatórias dos já sorteados
-                    const pessoasParaUltimaRodada = [...participantesSorteados];
-                    while (pessoasParaUltimaRodada.length < 4 && historicoDuplas.length > 0) {
-                        const duplaAnterior = historicoDuplas[Math.floor(Math.random() * historicoDuplas.length)];
-                        if (!pessoasParaUltimaRodada.includes(duplaAnterior.pessoa1)) {
-                            pessoasParaUltimaRodada.push(duplaAnterior.pessoa1);
-                        }
-                        if (!pessoasParaUltimaRodada.includes(duplaAnterior.pessoa2) && pessoasParaUltimaRodada.length < 4) {
-                            pessoasParaUltimaRodada.push(duplaAnterior.pessoa2);
-                        }
-                        break;
-                    }
-                    setParticipantes(pessoasParaUltimaRodada.slice(0, 4));
-                } else {
-                    // Nova rodada normal
-                    setParticipantes([...participantesSorteados]);
-                }
-                setParticipantesSorteados([]);
-                setRodadaAtual(rodadaAtual + 1);
-                setDuplaAtual(null);
-            }
-        };
-
-        // Função para resetar tudo
-        const resetarTudo = () => {
-            setParticipantes([]);
-            setParticipantesSorteados([]);
-            setDuplaAtual(null);
-            setHistoricoDuplas([]);
-            setRodadaAtual(1);
-            setIsAnimating(false);
-        };
-
-        // Função para adicionar participantes exemplo
-        const adicionarExemplo = () => {
-            const exemplos = ['Ana', 'Bruno', 'Carlos', 'Diana', 'Eduardo', 'Fernanda', 'Gabriel', 'Helena'];
-            setParticipantes(exemplos);
-        };
-
-        useEffect(() => {
-            verificarNovaRodada();
-        }, [participantes, participantesSorteados]);
-
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-600 via-blue-500 to-cyan-400 p-4">
-                <div className="max-w-4xl mx-auto">
-                    {/* Header */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 flex items-center justify-center gap-3">
-                            <Users className="text-white" size={40} />
-                            Sorteio de Duplas
-                        </h1>
-                        <p className="text-white/80 text-lg">Rodada {rodadaAtual}</p>
-                    </div>
-
-                    {/* Adicionar Participantes */}
-                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white/20">
-                        <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                            <Plus size={24} />
-                            Adicionar Participantes
-                        </h2>
-                        
-                        <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                            <input
-                                type="text"
-                                value={novoParticipante}
-                                onChange={(e) => setNovoParticipante(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && adicionarParticipante()}
-                                placeholder="Digite o nome do participante"
-                                className="flex-1 px-4 py-3 rounded-lg border border-white/30 bg-white/20 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-white/50"
-                            />
-                            <button
-                                onClick={adicionarParticipante}
-                                className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
-                            >
-                                <Plus size={20} />
-                                Adicionar
-                            </button>
-                        </div>
-
-                        <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                            <input
-                                type="file"
-                                ref={fileInputRef}
-                                onChange={importarLista}
-                                accept=".txt,.csv"
-                                className="hidden"
-                            />
-                            <button
-                                onClick={() => fileInputRef.current?.click()}
-                                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
-                            >
-                                <Upload size={20} />
-                                Importar Lista
-                            </button>
-                            <button
-                                onClick={adicionarExemplo}
-                                className="px-6 py-3 bg-purple-500 hover:bg-purple-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2"
-                            >
-                                <FileText size={20} />
-                                Adicionar Exemplo
-                            </button>
-                        </div>
-
-                        <div className="text-white/80 text-sm space-y-1">
-                            <p>💡 Dicas para importar:</p>
-                            <p>• Arquivos .txt ou .csv com nomes separados por linha, vírgula ou ponto e vírgula</p>
-                            <p>• Exemplo: "João, Maria, Pedro" ou cada nome em uma linha</p>
-                        </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                        {/* Lista de Participantes */}
-                        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                            <h2 className="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                                <Users size={24} />
-                                Participantes Disponíveis ({participantes.length})
-                            </h2>
-                            
-                            <div className="space-y-2 max-h-60 overflow-y-auto">
-                                {participantes.length === 0 ? (
-                                    <p className="text-white/70 text-center py-4">Nenhum participante disponível</p>
-                                ) : (
-                                    participantes.map((nome, index) => (
-                                        <div key={index} className="flex items-center justify-between bg-white/20 rounded-lg p-3">
-                                            <span className="text-white font-medium">{nome}</span>
-                                            <button
-                                                onClick={() => removerParticipante(nome)}
-                                                className="text-red-300 hover:text-red-100 transition-colors"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Participantes Sorteados */}
-                        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-                            <h2 className="text-2xl font-bold text-white mb-4">
-                                Já Sorteados ({participantesSorteados.length})
-                            </h2>
-                            
-                            <div className="space-y-2 max-h-60 overflow-y-auto">
-                                {participantesSorteados.length === 0 ? (
-                                    <p className="text-white/70 text-center py-4">Nenhum participante sorteado ainda</p>
-                                ) : (
-                                    participantesSorteados.map((nome, index) => (
-                                        <div key={index} className="bg-white/20 rounded-lg p-3">
-                                            <span className="text-white font-medium">{nome}</span>
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Área do Sorteio */}
-                    <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white/20">
-                        <div className="text-center">
-                            <button
-                                onClick={sortearDupla}
-                                disabled={participantes.length < 2 || isAnimating}
-                                className="mb-6 px-8 py-4 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-500 text-white rounded-2xl font-bold text-xl transition-all transform hover:scale-105 disabled:cursor-not-allowed flex items-center gap-3 mx-auto"
-                            >
-                                {isAnimating ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                                        Sorteando...
-                                    </>
-                                ) : (
-                                    <>
-                                        <Shuffle size={24} />
-                                        Sortear Dupla
-                                    </>
-                                )}
-                            </button>
-
-                            {duplaAtual && !isAnimating && (
-                                <div className="bg-white/20 rounded-2xl p-6 animate-pulse">
-                                    <h3 className="text-2xl font-bold text-white mb-4">🎉 Dupla Sorteada!</h3>
-                                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                                        <div className="bg-blue-500 text-white px-6 py-3 rounded-xl font-bold text-lg">
-                                            {duplaAtual.pessoa1}
-                                        </div>
-                                        <div className="text-3xl">💫</div>
-                                        <div className="bg-pink-500 text-white px-6 py-3 rounded-xl font-bold text-lg">
-                                            {duplaAtual.pessoa2}
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Histórico */}
-                    {historicoDuplas.length > 0 && (
-                        <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 mb-6 border border-white/20">
-                            <h2 className="text-2xl font-bold text-white mb-4">Histórico de Duplas</h2>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-60 overflow-y-auto">
-                                {historicoDuplas.map((dupla, index) => (
-                                    <div key={index} className="bg-white/20 rounded-lg p-3">
-                                        <div className="text-xs text-white/70 mb-1">Rodada {dupla.rodada}</div>
-                                        <div className="text-white font-medium">
-                                            {dupla.pessoa1} & {dupla.pessoa2}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Botão Reset */}
-                    <div className="text-center">
-                        <button
-                            onClick={resetarTudo}
-                            className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition-colors flex items-center gap-2 mx-auto"
-                        >
-                            <RotateCcw size={20} />
-                            Resetar Tudo
-                        </button>
+            <div class="results-section">
+                <h2 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="heart"></i>
+                    Duplas Formadas
+                </h2>
+                <div class="pairs-container" id="pairsContainer">
+                    <div class="empty-state">
+                        As duplas aparecerão aqui após o sorteio.
                     </div>
                 </div>
             </div>
-        );
-    };
+        </div>
+    </div>
 
-    ReactDOM.render(<SorteioDuplas />, document.getElementById('root'));
-</script>
-```
+    <script>
+        let participants = [];
 
+        // Aguarda o carregamento do Lucide
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
+
+        function updateParticipantsList() {
+            const listContainer = document.getElementById('participantsList');
+            const generateBtn = document.getElementById('generateBtn');
+
+            if (participants.length === 0) {
+                listContainer.innerHTML = '<div class="empty-state">Nenhum participante adicionado ainda. Comece digitando um nome acima!</div>';
+                generateBtn.disabled = true;
+            } else {
+                listContainer.innerHTML = participants.map((participant, index) => `
+                    <div class="participant-item">
+                        <span class="participant-name">${participant}</span>
+                        <button class="btn btn-danger" onclick="removeParticipant(${index})" style="padding: 5px 10px; font-size: 0.9rem;">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                `).join('');
+                generateBtn.disabled = participants.length < 2;
+
+                // Recriar ícones após atualizar o DOM
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            }
+        }
+
+        function addParticipant() {
+            const input = document.getElementById('participantInput');
+            const name = input.value.trim();
+
+            if (name === '') {
+                alert('Por favor, digite um nome válido!');
+                return;
+            }
+
+            if (participants.includes(name)) {
+                alert('Este participante já foi adicionado!');
+                return;
+            }
+
+            participants.push(name);
+            input.value = '';
+            updateParticipantsList();
+            input.focus();
+        }
+
+        function removeParticipant(index) {
+            participants.splice(index, 1);
+            updateParticipantsList();
+        }
+
+        function clearAll() {
+            if (participants.length > 0 && !confirm('Tem certeza que deseja limpar todos os participantes?')) {
+                return;
+            }
+            participants = [];
+            updateParticipantsList();
+            clearResults();
+        }
+
+        function addSampleData() {
+            const sampleNames = ['Ana Silva', 'Bruno Costa', 'Carla Santos', 'Diego Lima', 'Elena Rocha', 'Felipe Torres'];
+            participants = [...sampleNames];
+            updateParticipantsList();
+        }
+
+        function generatePairs() {
+            if (participants.length < 2) {
+                alert('É necessário pelo menos 2 participantes para formar duplas!');
+                return;
+            }
+
+            // Embaralhar array
+            const shuffled = [...participants].sort(() => Math.random() - 0.5);
+            const pairs = [];
+            let leftover = null;
+
+            // Formar duplas
+            for (let i = 0; i < shuffled.length - 1; i += 2) {
+                pairs.push([shuffled[i], shuffled[i + 1]]);
+            }
+
+            // Verificar se sobrou alguém
+            if (shuffled.length % 2 !== 0) {
+                leftover = shuffled[shuffled.length - 1];
+            }
+
+            displayResults(pairs, leftover);
+        }
+
+        function displayResults(pairs, leftover) {
+            const container = document.getElementById('pairsContainer');
+
+            let html = '';
+
+            pairs.forEach((pair, index) => {
+                html += `
+                    <div class="pair-card" style="animation-delay: ${index * 0.1}s">
+                        <h3>Dupla ${index + 1}</h3>
+                        <div class="pair-members">${pair[0]} & ${pair[1]}</div>
+                    </div>
+                `;
+            });
+
+            if (leftover) {
+                html += `
+                    <div class="leftover">
+                        <strong>⭐ ${leftover}</strong> ficou sem dupla (pode formar trio ou aguardar próxima rodada)
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function clearResults() {
+            const container = document.getElementById('pairsContainer');
+            container.innerHTML = '<div class="empty-state">As duplas aparecerão aqui após o sorteio.</div>';
+        }
+
+        // Event listeners
+        document.getElementById('participantInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addParticipant();
+            }
+        });
+
+        // Inicializar
+        updateParticipantsList();
+    </script>
 </body>
 </html>
