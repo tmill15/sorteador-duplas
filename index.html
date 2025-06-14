@@ -368,7 +368,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>⚔️ Sorteio de Confrontos</h1>
+            <h1>🏖️ Sorteio de Confrontos</h1>
             <p>Sorteie confrontos entre duplas, um por vez!</p>
         </div>
         
@@ -458,11 +458,36 @@
         let drawnParticipants = [];
         let currentMatch = null;
 
+        // Funções de persistência
+        function saveData() {
+            localStorage.setItem('sorteador_participants', JSON.stringify(participants));
+            localStorage.setItem('sorteador_drawnParticipants', JSON.stringify(drawnParticipants));
+        }
+
+        function loadData() {
+            const savedParticipants = localStorage.getItem('sorteador_participants');
+            const savedDrawnParticipants = localStorage.getItem('sorteador_drawnParticipants');
+            
+            if (savedParticipants) {
+                participants = JSON.parse(savedParticipants);
+            }
+            
+            if (savedDrawnParticipants) {
+                drawnParticipants = JSON.parse(savedDrawnParticipants);
+            }
+        }
+
+        function clearStoredData() {
+            localStorage.removeItem('sorteador_participants');
+            localStorage.removeItem('sorteador_drawnParticipants');
+        }
+
         // Aguarda o carregamento do Lucide
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
+            loadData(); // Carregar dados salvos
             updateAll();
         });
 
@@ -585,6 +610,7 @@
             
             participants.push(name);
             input.value = '';
+            saveData(); // Salvar dados
             updateAll();
             input.focus();
         }
@@ -593,6 +619,7 @@
             participants = participants.filter(p => p !== name);
             // Se o participante removido estava na lista de sorteados, removê-lo também
             drawnParticipants = drawnParticipants.filter(p => p !== name);
+            saveData(); // Salvar dados
             updateAll();
         }
 
@@ -603,6 +630,7 @@
             participants = [];
             drawnParticipants = [];
             currentMatch = null;
+            clearStoredData(); // Limpar dados salvos
             updateAll();
             clearCurrentMatch();
             clearCompletionNotice();
@@ -614,6 +642,7 @@
             }
             drawnParticipants = [];
             currentMatch = null; // Limpar o confronto atual também
+            saveData(); // Salvar dados
             updateAll();
             clearCurrentMatch(); // Limpar o card de próximo confronto
             clearCompletionNotice(); // Limpar o card explicativo
@@ -622,6 +651,7 @@
         function addSampleData() {
             const sampleNames = ['Ana Silva', 'Bruno Costa', 'Carla Santos', 'Diego Lima', 'Elena Rocha', 'Felipe Torres', 'Gabriela Nunes', 'Hugo Pereira'];
             participants = [...sampleNames];
+            saveData(); // Salvar dados
             updateAll();
         }
 
@@ -665,6 +695,7 @@
                 }
             });
 
+            saveData(); // Salvar dados
             displayCurrentMatch(currentMatch);
             updateAll();
         }
