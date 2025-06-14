@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteio de Duplas</title>
+    <title>Sorteio de Confrontos</title>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         * {
@@ -20,7 +20,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 20px;
@@ -46,8 +46,45 @@
             opacity: 0.9;
         }
 
-        .content {
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: #495057;
+            border: none;
+            background: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab.active {
+            background: white;
+            color: #4facfe;
+            border-bottom: 3px solid #4facfe;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
             padding: 40px;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .input-section {
@@ -172,40 +209,105 @@
             margin-top: 30px;
         }
 
-        .pairs-container {
+        .matches-container {
             display: grid;
-            gap: 15px;
+            gap: 20px;
             margin-top: 20px;
         }
 
-        .pair-card {
+        .match-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
             animation: slideIn 0.5s ease-out;
         }
 
-        .pair-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+        .match-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
             opacity: 0.9;
         }
 
-        .pair-members {
-            font-size: 1.1rem;
+        .match-details {
+            font-size: 1.2rem;
             font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .team {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .vs {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffd700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .leftover {
             background: linear-gradient(135deg, #ffa726 0%, #ff7043 100%);
             text-align: center;
-            padding: 15px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 15px;
             color: white;
             margin-top: 15px;
+            font-weight: 600;
+            box-shadow: 0 10px 20px rgba(255, 167, 38, 0.2);
+        }
+
+        .drawn-participants {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .drawn-participant {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.2);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid #e9ecef;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #4facfe;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #6c757d;
             font-weight: 600;
         }
 
@@ -231,18 +333,27 @@
             .header h1 {
                 font-size: 2rem;
             }
-
-            .content {
+            
+            .tab-content {
                 padding: 20px;
             }
-
+            
             .input-group {
                 flex-direction: column;
             }
-
+            
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+
+            .match-details {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -250,14 +361,30 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎲 Sorteio de Duplas</h1>
-            <p>Organize suas duplas de forma rápida e justa!</p>
+            <h1>⚔️ Sorteio de Confrontos</h1>
+            <p>Organize confrontos entre duplas de forma justa!</p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('participants')">
+                <i data-lucide="users"></i>
+                Participantes
+            </button>
+            <button class="tab" onclick="switchTab('matches')">
+                <i data-lucide="zap"></i>
+                Confrontos
+            </button>
+            <button class="tab" onclick="switchTab('drawn')">
+                <i data-lucide="check-circle"></i>
+                Já Sorteados
+            </button>
         </div>
 
-        <div class="content">
+        <!-- Aba Participantes -->
+        <div class="tab-content active" id="participants-tab">
             <div class="input-section">
                 <h2>
-                    <i data-lucide="users"></i>
+                    <i data-lucide="user-plus"></i>
                     Adicionar Participantes
                 </h2>
                 <div class="input-group">
@@ -283,52 +410,97 @@
                 </button>
             </div>
 
-            <button class="btn btn-success" onclick="generatePairs()" id="generateBtn" disabled>
-                <i data-lucide="shuffle"></i> Sortear Duplas
+            <button class="btn btn-success" onclick="generateMatches()" id="generateBtn" disabled>
+                <i data-lucide="shuffle"></i> Sortear Confrontos
             </button>
+        </div>
 
+        <!-- Aba Confrontos -->
+        <div class="tab-content" id="matches-tab">
+            <div class="stats" id="matchStats"></div>
+            
             <div class="results-section">
                 <h2 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
-                    <i data-lucide="heart"></i>
-                    Duplas Formadas
+                    <i data-lucide="sword"></i>
+                    Confrontos Sorteados
                 </h2>
-                <div class="pairs-container" id="pairsContainer">
+                <div class="matches-container" id="matchesContainer">
                     <div class="empty-state">
-                        As duplas aparecerão aqui após o sorteio.
+                        Os confrontos aparecerão aqui após o sorteio.
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Aba Já Sorteados -->
+        <div class="tab-content" id="drawn-tab">
+            <div class="results-section">
+                <h2 style="color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px;">
+                    <i data-lucide="award"></i>
+                    Participantes Já Sorteados
+                </h2>
+                <div class="drawn-participants" id="drawnContainer">
+                    <div class="empty-state">
+                        Os participantes já sorteados aparecerão aqui.
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary" onclick="clearDrawnParticipants()" style="margin-top: 20px; width: 100%;">
+                    <i data-lucide="refresh-cw"></i> Limpar Lista de Sorteados
+                </button>
             </div>
         </div>
     </div>
 
     <script>
         let participants = [];
+        let drawnParticipants = [];
+        let currentMatches = [];
 
         // Aguarda o carregamento do Lucide
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof lucide !== 'undefined') {
                 lucide.createIcons();
             }
+            updateAll();
         });
+
+        function switchTab(tabName) {
+            // Remover classe active de todas as abas
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            // Adicionar classe active na aba selecionada
+            document.querySelector(`#${tabName}-tab`).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Recriar ícones
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
 
         function updateParticipantsList() {
             const listContainer = document.getElementById('participantsList');
             const generateBtn = document.getElementById('generateBtn');
-
-            if (participants.length === 0) {
-                listContainer.innerHTML = '<div class="empty-state">Nenhum participante adicionado ainda. Comece digitando um nome acima!</div>';
+            
+            // Filtrar participantes disponíveis (não sorteados)
+            const availableParticipants = participants.filter(p => !drawnParticipants.includes(p));
+            
+            if (availableParticipants.length === 0) {
+                listContainer.innerHTML = '<div class="empty-state">Nenhum participante disponível. Adicione novos participantes ou limpe a lista de sorteados!</div>';
                 generateBtn.disabled = true;
             } else {
-                listContainer.innerHTML = participants.map((participant, index) => `
+                listContainer.innerHTML = availableParticipants.map((participant, index) => `
                     <div class="participant-item">
                         <span class="participant-name">${participant}</span>
-                        <button class="btn btn-danger" onclick="removeParticipant(${index})" style="padding: 5px 10px; font-size: 0.9rem;">
+                        <button class="btn btn-danger" onclick="removeParticipant('${participant}')" style="padding: 5px 10px; font-size: 0.9rem;">
                             <i data-lucide="x"></i>
                         </button>
                     </div>
                 `).join('');
-                generateBtn.disabled = participants.length < 2;
-
+                generateBtn.disabled = availableParticipants.length < 4;
+                
                 // Recriar ícones após atualizar o DOM
                 if (typeof lucide !== 'undefined') {
                     lucide.createIcons();
@@ -336,29 +508,74 @@
             }
         }
 
+        function updateDrawnParticipants() {
+            const container = document.getElementById('drawnContainer');
+            
+            if (drawnParticipants.length === 0) {
+                container.innerHTML = '<div class="empty-state">Os participantes já sorteados aparecerão aqui.</div>';
+            } else {
+                container.innerHTML = drawnParticipants.map(participant => `
+                    <div class="drawn-participant">
+                        ${participant}
+                    </div>
+                `).join('');
+            }
+        }
+
+        function updateMatchStats() {
+            const container = document.getElementById('matchStats');
+            const availableCount = participants.filter(p => !drawnParticipants.includes(p)).length;
+            const possibleMatches = Math.floor(availableCount / 4);
+            
+            container.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${availableCount}</div>
+                    <div class="stat-label">Disponíveis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${drawnParticipants.length}</div>
+                    <div class="stat-label">Já Sorteados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${possibleMatches}</div>
+                    <div class="stat-label">Confrontos Possíveis</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${currentMatches.length}</div>
+                    <div class="stat-label">Confrontos Atuais</div>
+                </div>
+            `;
+        }
+
+        function updateAll() {
+            updateParticipantsList();
+            updateDrawnParticipants();
+            updateMatchStats();
+        }
+
         function addParticipant() {
             const input = document.getElementById('participantInput');
             const name = input.value.trim();
-
+            
             if (name === '') {
                 alert('Por favor, digite um nome válido!');
                 return;
             }
-
+            
             if (participants.includes(name)) {
                 alert('Este participante já foi adicionado!');
                 return;
             }
-
+            
             participants.push(name);
             input.value = '';
-            updateParticipantsList();
+            updateAll();
             input.focus();
         }
 
-        function removeParticipant(index) {
-            participants.splice(index, 1);
-            updateParticipantsList();
+        function removeParticipant(name) {
+            participants = participants.filter(p => p !== name);
+            updateAll();
         }
 
         function clearAll() {
@@ -366,68 +583,99 @@
                 return;
             }
             participants = [];
-            updateParticipantsList();
+            drawnParticipants = [];
+            currentMatches = [];
+            updateAll();
             clearResults();
         }
 
-        function addSampleData() {
-            const sampleNames = ['Ana Silva', 'Bruno Costa', 'Carla Santos', 'Diego Lima', 'Elena Rocha', 'Felipe Torres'];
-            participants = [...sampleNames];
-            updateParticipantsList();
+        function clearDrawnParticipants() {
+            if (drawnParticipants.length > 0 && !confirm('Tem certeza que deseja limpar a lista de participantes sorteados?')) {
+                return;
+            }
+            drawnParticipants = [];
+            updateAll();
         }
 
-        function generatePairs() {
-            if (participants.length < 2) {
-                alert('É necessário pelo menos 2 participantes para formar duplas!');
+        function addSampleData() {
+            const sampleNames = ['Ana Silva', 'Bruno Costa', 'Carla Santos', 'Diego Lima', 'Elena Rocha', 'Felipe Torres', 'Gabriela Nunes', 'Hugo Pereira'];
+            participants = [...sampleNames];
+            updateAll();
+        }
+
+        function generateMatches() {
+            const availableParticipants = participants.filter(p => !drawnParticipants.includes(p));
+            
+            if (availableParticipants.length < 4) {
+                alert('É necessário pelo menos 4 participantes disponíveis para formar confrontos!');
                 return;
             }
 
-            // Embaralhar array
-            const shuffled = [...participants].sort(() => Math.random() - 0.5);
-            const pairs = [];
-            let leftover = null;
+            // Embaralhar participantes disponíveis
+            const shuffled = [...availableParticipants].sort(() => Math.random() - 0.5);
+            const matches = [];
+            let leftover = [];
 
-            // Formar duplas
-            for (let i = 0; i < shuffled.length - 1; i += 2) {
-                pairs.push([shuffled[i], shuffled[i + 1]]);
+            // Formar confrontos (cada confronto precisa de 4 pessoas: 2 duplas)
+            for (let i = 0; i < shuffled.length - 3; i += 4) {
+                const team1 = [shuffled[i], shuffled[i + 1]];
+                const team2 = [shuffled[i + 2], shuffled[i + 3]];
+                matches.push({ team1, team2 });
+                
+                // Adicionar à lista de sorteados
+                drawnParticipants.push(...team1, ...team2);
             }
 
-            // Verificar se sobrou alguém
-            if (shuffled.length % 2 !== 0) {
-                leftover = shuffled[shuffled.length - 1];
+            // Verificar se sobraram participantes (menos de 4)
+            const remaining = shuffled.length % 4;
+            if (remaining > 0) {
+                leftover = shuffled.slice(shuffled.length - remaining);
             }
 
-            displayResults(pairs, leftover);
+            currentMatches = matches;
+            displayMatches(matches, leftover);
+            updateAll();
+            
+            // Mudar para a aba de confrontos
+            switchTab('matches');
+            document.querySelector('[onclick="switchTab(\'matches\')"]').classList.add('active');
         }
 
-        function displayResults(pairs, leftover) {
-            const container = document.getElementById('pairsContainer');
-
+        function displayMatches(matches, leftover) {
+            const container = document.getElementById('matchesContainer');
+            
             let html = '';
-
-            pairs.forEach((pair, index) => {
+            
+            matches.forEach((match, index) => {
                 html += `
-                    <div class="pair-card" style="animation-delay: ${index * 0.1}s">
-                        <h3>Dupla ${index + 1}</h3>
-                        <div class="pair-members">${pair[0]} & ${pair[1]}</div>
+                    <div class="match-card" style="animation-delay: ${index * 0.1}s">
+                        <h3>Confronto ${index + 1}</h3>
+                        <div class="match-details">
+                            <div class="team">${match.team1[0]} & ${match.team1[1]}</div>
+                            <div class="vs">VS</div>
+                            <div class="team">${match.team2[0]} & ${match.team2[1]}</div>
+                        </div>
                     </div>
                 `;
             });
 
-            if (leftover) {
+            if (leftover.length > 0) {
                 html += `
                     <div class="leftover">
-                        <strong>⭐ ${leftover}</strong> ficou sem dupla (pode formar trio ou aguardar próxima rodada)
+                        <strong>⏳ ${leftover.join(', ')}</strong> ${leftover.length === 1 ? 'ficou' : 'ficaram'} de fora desta rodada
+                        <br><small>Será${leftover.length === 1 ? '' : 'ão'} sorteado${leftover.length === 1 ? '' : 's'} na próxima vez</small>
                     </div>
                 `;
             }
 
-            container.innerHTML = html;
+            container.innerHTML = html || '<div class="empty-state">Nenhum confronto foi gerado.</div>';
         }
 
         function clearResults() {
-            const container = document.getElementById('pairsContainer');
-            container.innerHTML = '<div class="empty-state">As duplas aparecerão aqui após o sorteio.</div>';
+            const container = document.getElementById('matchesContainer');
+            container.innerHTML = '<div class="empty-state">Os confrontos aparecerão aqui após o sorteio.</div>';
+            currentMatches = [];
+            updateMatchStats();
         }
 
         // Event listeners
@@ -438,7 +686,7 @@
         });
 
         // Inicializar
-        updateParticipantsList();
+        updateAll();
     </script>
 </body>
 </html>
