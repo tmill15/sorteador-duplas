@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Sorteio de Confrontos</title>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
@@ -44,24 +44,26 @@
             box-sizing: border-box;
         }
 
+        html {
+            height: 100%;
+            background: var(--bg-gradient);
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-gradient);
+            height: 100%;
             min-height: 100vh;
-            min-height: 100dvh; /* Para dispositivos móveis modernos */
+            min-height: 100dvh;
             margin: 0;
             padding: 0;
             color: var(--text-primary);
+            position: relative;
         }
 
         .page-wrapper {
             min-height: 100vh;
-            min-height: 100dvh;
             padding: 20px;
-            padding-top: max(20px, env(safe-area-inset-top));
-            padding-bottom: max(20px, env(safe-area-inset-bottom));
-            padding-left: max(20px, env(safe-area-inset-left));
-            padding-right: max(20px, env(safe-area-inset-right));
         }
 
         .container {
