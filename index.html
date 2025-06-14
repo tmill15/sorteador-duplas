@@ -631,11 +631,11 @@
             generateBtn.disabled = !canGenerate;
             generateBtn.innerHTML = `<i data-lucide="shuffle"></i> ${buttonText}`;
             
-            // Mostrar atalho para limpar lista quando todos estão sorteados e não é possível sortear
+            // Mostrar botão para limpar lista quando todos estão sorteados e não é possível sortear
             if (!canGenerate && totalParticipants >= 4 && drawnParticipants.length > 0) {
                 clearShortcutContainer.innerHTML = `
-                    <button class="clear-shortcut" onclick="switchTab('drawn')">
-                        <i data-lucide="arrow-right"></i> Ir para Sorteados e Limpar Lista
+                    <button class="clear-shortcut" onclick="clearDrawnParticipants()">
+                        <i data-lucide="refresh-cw"></i> Limpar Lista de Sorteados
                         <div class="hint">💡 Limpe a lista para sortear novamente</div>
                     </button>
                 `;
