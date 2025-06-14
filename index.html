@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteio de Confrontos</title>
+    <title>Sorteio de Duplas</title>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
     <style>
         * {
@@ -368,14 +368,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>⚔️ Sorteio de Confrontos</h1>
-            <p>Sorteie confrontos entre duplas, um por vez!</p>
+            <h1>🏖️ Sorteio de Duplas</h1>
+            <p>Sorteio de duplas de beach tennis</p>
         </div>
         
         <div class="tabs">
             <button class="tab active" onclick="switchTab('matches')">
                 <i data-lucide="zap"></i>
-                Confrontos
+                Duplas
             </button>
             <button class="tab" onclick="switchTab('participants')">
                 <i data-lucide="users"></i>
@@ -387,12 +387,12 @@
             </button>
         </div>
 
-        <!-- Aba Confrontos -->
+        <!-- Aba Duplas -->
         <div class="tab-content active" id="matches-tab">
             <div class="stats" id="matchStats"></div>
             
             <button class="btn btn-success" onclick="generateSingleMatch()" id="generateBtn">
-                <i data-lucide="shuffle"></i> Sortear Próximo Confronto
+                <i data-lucide="shuffle"></i> Sortear Próxima Dupla
             </button>
 
             <div class="results-section">
@@ -523,15 +523,15 @@
             const availableCount = participants.filter(p => !drawnParticipants.includes(p)).length;
             const totalParticipants = participants.length;
             
-            // Verificar se é possível sortear um confronto
+            // Verificar se é possível sortear uma dupla
             let canGenerate = false;
-            let buttonText = 'Sortear Próximo Confronto';
+            let buttonText = 'Sortear Próxima Dupla';
             
             if (availableCount >= 4) {
                 canGenerate = true;
             } else if (availableCount > 0 && drawnParticipants.length >= (4 - availableCount)) {
                 canGenerate = true;
-                buttonText = `Sortear Confronto (${4 - availableCount} da lista de sorteados)`;
+                buttonText = `Sortear Dupla (${4 - availableCount} da lista de sorteados)`;
             } else if (totalParticipants < 4) {
                 buttonText = 'Adicione pelo menos 4 participantes';
             } else {
@@ -556,7 +556,7 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">${currentMatch ? 1 : 0}</div>
-                    <div class="stat-label">Confronto Atual</div>
+                    <div class="stat-label">Dupla Atual</div>
                 </div>
             `;
 
@@ -645,7 +645,7 @@
             }
 
             if (selectedParticipants.length < 4) {
-                alert('Não há participantes suficientes para formar um confronto!');
+                alert('Não há participantes suficientes para formar uma dupla!');
                 return;
             }
 
@@ -677,7 +677,7 @@
             if (match.fromDrawnList.length > 0) {
                 completionNotice = `
                     <div class="completion-notice">
-                        🔄 <strong>${match.fromDrawnList.join(', ')}</strong> ${match.fromDrawnList.length === 1 ? 'foi retirado' : 'foram retirados'} da lista de sorteados para completar este confronto
+                        🔄 <strong>${match.fromDrawnList.join(', ')}</strong> ${match.fromDrawnList.length === 1 ? 'foi retirado' : 'foram retirados'} da lista de sorteados para completar esta dupla
                     </div>
                 `;
             }
@@ -686,7 +686,7 @@
 
             container.innerHTML = `
                 <div class="current-match">
-                    <h3>🏆 Confronto Atual</h3>
+                    <h3>🏆 Dupla Atual</h3>
                     <div class="match-details">
                         <div class="team">${match.team1[0]} & ${match.team1[1]}</div>
                         <div class="vs">VS</div>
