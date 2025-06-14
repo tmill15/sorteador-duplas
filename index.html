@@ -49,12 +49,19 @@
             background: var(--bg-gradient);
             min-height: 100vh;
             min-height: 100dvh; /* Para dispositivos móveis modernos */
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            min-height: 100dvh;
             padding: 20px;
             padding-top: max(20px, env(safe-area-inset-top));
             padding-bottom: max(20px, env(safe-area-inset-bottom));
             padding-left: max(20px, env(safe-area-inset-left));
             padding-right: max(20px, env(safe-area-inset-right));
-            color: var(--text-primary);
         }
 
         .container {
@@ -433,7 +440,8 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="page-wrapper">
+        <div class="container">
         <div class="header">
             <h1>🏖️ Sorteio de Confrontos</h1>
             <p>Sorteio de duplas - Beach Tennis</p>
@@ -520,6 +528,7 @@
                 </button>
             </div>
         </div>
+    </div>
     </div>
 
     <script>
