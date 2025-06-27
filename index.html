@@ -1042,6 +1042,11 @@
                 return;
             }
 
+            // Confirmar antes de remover o participante
+            if (!confirm(`Tem certeza que deseja remover "${participantName}" do confronto?\n\nO participante voltará para a fila e será substituído por outro disponível.`)) {
+                return;
+            }
+
             // Remover o participante da lista de sorteados (volta para a fila)
             drawnParticipants = drawnParticipants.filter(p => p !== participantName);
 
