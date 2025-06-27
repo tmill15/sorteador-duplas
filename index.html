@@ -23,6 +23,7 @@
     <meta name="description" content="Aplicativo para sorteio de duplas no Beach Tennis">
     
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="config.js"></script>
     <style>
         :root {
             --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -592,7 +593,7 @@
 
     <!-- Rodapé com informações da versão -->
     <footer style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85rem; opacity: 0.7;">
-        <div>Versão: <code style="background: var(--bg-light); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;">239e341</code></div>
+        <div>Versão: <code id="version-info" style="background: var(--bg-light); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;">carregando...</code></div>
     </footer>
 
     <script>
@@ -636,6 +637,16 @@
             }
         }
 
+        // Função para carregar informações da versão
+        function loadVersionInfo() {
+            const versionElement = document.getElementById('version-info');
+            if (window.APP_CONFIG && window.APP_CONFIG.version) {
+                versionElement.textContent = window.APP_CONFIG.version;
+            } else {
+                versionElement.textContent = 'local-dev';
+            }
+        }
+
         // Aguarda o carregamento do Lucide
         document.addEventListener('DOMContentLoaded', function() {
             if (typeof lucide !== 'undefined') {
@@ -644,6 +655,7 @@
             loadData(); // Carregar dados salvos
             updateAll();
             updateThemeColor(); // Ajustar cor do tema PWA
+            loadVersionInfo(); // Carregar informações da versão
             
             // Escutar mudanças no esquema de cores
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeColor);
