@@ -3,7 +3,7 @@
 > Aplicativo PWA para sorteio de duplas no Beach Tennis
 
 [![PWA](https://img.shields.io/badge/PWA-Ready-blue.svg)](https://web.dev/progressive-web-apps/)
-[![Version](https://img.shields.io/badge/version-0.1.0-green.svg)](https://github.com/your-username/sorteador-duplas)
+[![Version](https://img.shields.io/badge/version-0.1.0-green.svg)](https://github.com/tmill15/sorteador-duplas)
 [![License](https://img.shields.io/badge/license-MIT-yellow.svg)](LICENSE)
 
 ## 📋 Descrição
@@ -90,7 +90,7 @@ sorteador-duplas/
 ### Executando Localmente
 ```bash
 # Clone o repositório
-git clone https://github.com/your-username/sorteador-duplas.git
+git clone https://github.com/tmill15/sorteador-duplas.git
 
 # Navegue até o diretório
 cd sorteador-duplas
@@ -130,8 +130,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 **Thiago Milhomem**
 
-- GitHub: [@seu-usuario](https://github.com/seu-usuario)
-- Email: seu-email@exemplo.com
+- GitHub: [@tmill15](https://github.com/tmill15)
 
 ## 🙏 Agradecimentos
 
