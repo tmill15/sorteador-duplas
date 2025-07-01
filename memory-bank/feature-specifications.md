@@ -8,15 +8,31 @@
 **Functionality**:
 - Add new players with names
 - Remove players from the list
-- Edit existing player names
+- Move players to drawn list (without drawing them)
 - Validate player names (non-empty, unique)
 - Display current player count
+- Smart empty state handling
+- Automatic alphabetical sorting
+- Real-time search functionality
+- Bulk selection and actions
 
 **UI Components**:
 - Input field for player name
 - Add button with icon
-- List of current players
-- Remove/edit buttons for each player
+- Search field for filtering participants
+- Checkboxes for individual selection
+- Bulk actions panel with:
+  - Selection counter
+  - Select all / Clear selection buttons
+  - Move selected to drawn list
+  - Remove selected participants
+- List of current players (alphabetically sorted and filtered)
+- Action buttons for each player:
+  - Move to drawn list (check icon)
+  - Remove player (X icon)
+- Contextual empty state messages
+- Quick access button to clear drawn list
+- Search results with clear search option
 
 ### 2. Pair Generation Algorithm
 **Purpose**: Randomly generate balanced pairs from the player pool.
@@ -27,25 +43,28 @@
 - Ensure random distribution
 - Prevent duplicate pairs in same session
 - Display results clearly
+- Move drawn players to drawn list automatically
 
 **Algorithm Logic**:
 1. Shuffle player array randomly
 2. Create pairs from consecutive players
 3. Handle remaining player (if odd count)
-4. Display results with clear formatting
+4. Move all drawn players to drawn list AND remove from participants list
+5. Display results with clear formatting
 
 ### 3. Tabbed Interface
 **Purpose**: Organize different functionalities into separate sections.
 
 **Tabs**:
-- **Players**: Player management interface
-- **Draw**: Pair generation and results
-- **History**: Previous draws (if implemented)
+- **Confrontos**: Match generation and current match display
+- **Participantes**: Player management interface
+- **Sorteados**: List of players already drawn
 
 **Navigation**:
 - Smooth transitions between tabs
 - Active tab indication
 - Responsive design for mobile
+- Contextual shortcuts and actions
 
 ### 4. PWA Functionality
 **Purpose**: Make the app installable and work offline.
@@ -56,6 +75,27 @@
 - App-like experience
 - Home screen icon
 - Splash screen
+
+### 5. Drawn List Management
+**Purpose**: Manage participants who have already been drawn or manually moved to the drawn list.
+
+**Features**:
+- Move participants back to main list individually
+- Clear all drawn participants (returns them to main list)
+- Prevent duplicate entries
+- Maintain data consistency between lists
+- Handle participant replacement in current matches
+- Automatic alphabetical sorting of drawn participants
+- Real-time search functionality for drawn participants
+
+### 6. Match Management
+**Purpose**: Manage current matches and participant substitutions.
+
+**Features**:
+- Remove participants from current match
+- Automatic replacement with available participants
+- Maintain list consistency during substitutions
+- Handle edge cases when no replacements are available
 
 ## UI/UX Features
 
