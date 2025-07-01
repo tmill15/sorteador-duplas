@@ -262,7 +262,9 @@
 
         .participant-actions {
             display: flex;
-            gap: 5px;
+            gap: 8px;
+            justify-content: flex-end;
+            width: auto;
         }
 
         .participant-actions .btn {
@@ -605,25 +607,20 @@
             }
 
             .participant-item {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 10px;
+                /* flex-direction: column; */
+                /* align-items: flex-start; */
+                /* gap: 8px; */
             }
-
             .participant-item > div:first-child {
+                width: 100%;
                 display: flex;
                 align-items: center;
                 gap: 10px;
             }
-
             .participant-actions {
-                justify-content: center;
-                width: 100%;
-            }
-
-            .participant-actions .btn {
-                flex: 1;
-                justify-content: center;
+                width: auto;
+                justify-content: flex-end;
+                gap: 8px;
             }
         }
     </style>
@@ -1405,8 +1402,6 @@
             // Mostrar mensagem de substituição
             alert(`"${participantName}" foi removido e substituído por "${replacement}".`);
         }
-
-
 
         function clearCurrentMatch() {
             const container = document.getElementById('currentMatchContainer');
