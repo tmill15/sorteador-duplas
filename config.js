@@ -4,7 +4,7 @@ const APP_CONFIG = {
     name: "Sorteador de Duplas",
     description: "Beach Tennis",
     author: "Thiago Milhomem",
-    buildDate: "2025-01-27"
+    buildDate: "2025-06-30"
 };
 
 // Exportar para uso global
