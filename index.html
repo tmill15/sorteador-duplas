@@ -981,7 +981,7 @@
             const generateBtn = document.getElementById('generateBtn');
             const clearShortcutContainer = document.getElementById('clearShortcut');
             const availableCount = participants.filter(p => !drawnParticipants.includes(p)).length;
-            const totalParticipants = participants.length;
+            const totalParticipants = participants.length + drawnParticipants.length;
             
             // Verificar se é possível sortear um confronto
             let canGenerate = false;
@@ -1013,7 +1013,6 @@
                 clearShortcutContainer.innerHTML = '';
             }
             
-            // Removido o card "Confronto Atual" que sempre mostrava 1
             container.innerHTML = `
                 <div class="stat-card">
                     <div class="stat-number">${totalParticipants}</div>
