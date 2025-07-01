@@ -65,6 +65,7 @@
 - Active tab indication
 - Responsive design for mobile
 - Contextual shortcuts and actions
+- Mobile-optimized bulk actions layout
 
 ### 4. PWA Functionality
 **Purpose**: Make the app installable and work offline.
