@@ -862,8 +862,11 @@
     </div>
 
     <!-- Rodapé com informações da versão -->
-    <footer style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85rem; opacity: 0.7;">
+    <footer style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85rem; opacity: 0.7; display:flex; flex-direction:column; gap:8px; align-items:center;">
         <div>Versão: <code id="version-info" style="background: var(--bg-light); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;">carregando...</code></div>
+        <button id="check-update-btn" class="btn btn-secondary" style="padding:6px 10px; font-size:0.85rem;">
+            <i data-lucide="refresh-cw"></i> Verificar atualização
+        </button>
     </footer>
 
     <script>
@@ -944,6 +947,12 @@
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeColor);
             // Registrar service worker
             registerServiceWorker();
+            // Checar atualização pouco depois do carregamento
+            setTimeout(checkForSWUpdate, 1500);
+            // Checar ao retornar ao app
+            document.addEventListener('visibilitychange', () => { if (!document.hidden) checkForSWUpdate(); });
+            // Botão manual
+            document.getElementById('check-update-btn').addEventListener('click', checkForSWUpdate);
         });
 
         function switchTab(tabName) {
@@ -1677,8 +1686,8 @@
         function registerServiceWorker() {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    const swUrl = `sw.js?v=${(window.APP_CONFIG && window.APP_CONFIG.version) ? window.APP_CONFIG.version : 'dev'}`;
-                    navigator.serviceWorker.register(swUrl)
+                    // Usar caminho estável do SW; o update é por conteúdo do arquivo
+                    navigator.serviceWorker.register('sw.js')
                         .then(reg => {
                             if (reg.waiting) {
                                 showUpdateBanner(reg.waiting);
@@ -1697,6 +1706,25 @@
                         .catch(() => {});
                 });
             }
+        }
+
+        // Força verificação de update do SW
+        function checkForSWUpdate() {
+            if (!('serviceWorker' in navigator)) return;
+            navigator.serviceWorker.getRegistration().then(reg => {
+                if (!reg) return;
+                reg.update();
+                if (reg.waiting) {
+                    showUpdateBanner(reg.waiting);
+                } else if (reg.installing) {
+                    const w = reg.installing;
+                    w.addEventListener('statechange', () => {
+                        if (w.state === 'installed' && navigator.serviceWorker.controller) {
+                            showUpdateBanner(w);
+                        }
+                    });
+                }
+            });
         }
 
         function showUpdateBanner(worker) {

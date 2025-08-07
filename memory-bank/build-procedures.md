@@ -8,8 +8,8 @@ Quando eu receber a instrução “preparar build”, devo executar os passos ab
    - Incrementar a versão no formato SemVer (patch por padrão), em `APP_CONFIG.version`.
    - Atualizar `APP_CONFIG.buildDate` para a data atual no formato `YYYY-MM-DD`.
 2. Service Worker e cache
-   - O `sw.js` agora recebe a versão via query string no registro (ex.: `sw.js?v=0.2.7`).
-   - O nome do cache é derivado automaticamente dessa versão, então NÃO é necessário editar o `sw.js` a cada build.
+   - Atualize `CACHE_VERSION` em `sw.js` para o mesmo valor de `APP_CONFIG.version`.
+   - Isso garante invalidação do cache e exibição do banner “App atualizado”.
 3. Atualizar exibição de versão no app
    - A versão é carregada de `APP_CONFIG.version` e exibida no rodapé via `index.html`.
 4. Conferir PWA/manifesto (manual, se aplicável)
