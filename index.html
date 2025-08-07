@@ -1693,7 +1693,7 @@
             if (!('serviceWorker' in navigator)) return;
             window.addEventListener('load', async () => {
                 const version = (window.APP_CONFIG && window.APP_CONFIG.version) ? window.APP_CONFIG.version : 'dev';
-                const desiredUrl = new URL(`sw.js?v=${version}`, window.location).href;
+                const desiredUrl = new URL(`sw-${version}.js`, window.location).href;
 
                 try {
                     const reg = await navigator.serviceWorker.getRegistration();
@@ -1704,7 +1704,7 @@
                         await reg.unregister();
                     }
 
-                    const finalReg = await navigator.serviceWorker.register(`sw.js?v=${version}`, { updateViaCache: 'none' });
+                    const finalReg = await navigator.serviceWorker.register(`sw-${version}.js`, { updateViaCache: 'none' });
 
                     if (finalReg.waiting) {
                         showUpdateBanner(finalReg.waiting);
