@@ -1,6 +1,6 @@
-/* Service Worker - Sorteador de Duplas (v0.2.14) */
+/* Service Worker - Sorteador de Duplas (v0.3.0) */
 
-const CACHE_VERSION = '0.2.14';
+const CACHE_VERSION = '0.3.0';
 const CACHE_NAME = `sorteador-cache-v${CACHE_VERSION}`;
 
 const APP_SHELL = [
