@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Sorteio de Confrontos</title>
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
@@ -67,7 +67,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg-gradient);
             min-height: 100vh;
-            padding: 20px;
+            padding-top: calc(env(safe-area-inset-top, 0px) + 20px);
+            padding-right: calc(env(safe-area-inset-right, 0px) + 20px);
+            padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
+            padding-left: calc(env(safe-area-inset-left, 0px) + 20px);
             color: var(--text-primary);
         }
 
@@ -88,7 +91,7 @@
         }
 
         .header h1 {
-            font-size: 2.5rem;
+            font-size: clamp(1.6rem, 5vw, 2.5rem);
             margin-bottom: 10px;
             font-weight: 700;
         }
@@ -566,6 +569,16 @@
             }
         }
 
+        /* Respeita preferências do usuário para reduzir movimento */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -842,12 +855,28 @@
         </div>
     </div>
 
+    <!-- Banner de atualização do SW -->
+    <div id="sw-update-banner" style="display:none; position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); left: 50%; transform: translateX(-50%); background: var(--card-bg); color: var(--text-primary); border: 2px solid var(--border-light); box-shadow: 0 8px 16px var(--shadow-color); padding: 10px 14px; border-radius: 999px; z-index: 1000; display: flex; gap: 10px; align-items: center;">
+        <span style="font-weight: 600;">App atualizado</span>
+        <button id="sw-reload-btn" class="btn btn-primary" style="padding: 8px 12px;">Recarregar</button>
+    </div>
+
     <!-- Rodapé com informações da versão -->
     <footer style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85rem; opacity: 0.7;">
         <div>Versão: <code id="version-info" style="background: var(--bg-light); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;">carregando...</code></div>
     </footer>
 
     <script>
+        // i18n simples (PT-BR como padrão)
+        const I18N = {
+            'pt-BR': {
+                shareTitle: 'Próximo confronto',
+                shareText: 'Confronto sorteado no Sorteador de Duplas',
+                shareButton: 'Compartilhar Confronto',
+            }
+        };
+        const lang = 'pt-BR';
+
         let participants = [];
         let drawnParticipants = [];
         let currentMatch = null;
@@ -913,6 +942,8 @@
             
             // Escutar mudanças no esquema de cores
             window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeColor);
+            // Registrar service worker
+            registerServiceWorker();
         });
 
         function switchTab(tabName) {
@@ -1403,6 +1434,9 @@
                             ${match.team2.map(participant => createParticipantHTML(participant)).join('')}
                         </div>
                     </div>
+                    <button class="btn btn-primary" onclick="shareCurrentMatch()" style="margin-top:12px;">
+                        <i data-lucide="share-2"></i> ${I18N[lang].shareButton}
+                    </button>
                 </div>
             `;
 
@@ -1471,6 +1505,7 @@
             updateAll();
 
             // Mostrar mensagem de substituição
+            if (navigator.vibrate) { navigator.vibrate(30); }
             alert(`"${participantName}" foi removido e substituído por "${replacement}".`);
         }
 
@@ -1620,6 +1655,62 @@
 
         // Inicializar
         updateAll();
+
+        // Compartilhar confronto atual
+        function shareCurrentMatch() {
+            if (!currentMatch) {
+                alert('Não há confronto ativo para compartilhar.');
+                return;
+            }
+            const text = `${I18N[lang].shareText}:\n\nTime 1: ${currentMatch.team1.join(' e ')}\nTime 2: ${currentMatch.team2.join(' e ')}`;
+            if (navigator.share) {
+                navigator.share({ title: I18N[lang].shareTitle, text })
+                    .catch(() => {});
+            } else {
+                // Fallback: copiar para área de transferência
+                navigator.clipboard.writeText(text).then(() => alert('Confronto copiado!'));
+            }
+            if (navigator.vibrate) { navigator.vibrate(20); }
+        }
+
+        // Registro do Service Worker + lógica de atualização
+        function registerServiceWorker() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    const swUrl = `sw.js?v=${(window.APP_CONFIG && window.APP_CONFIG.version) ? window.APP_CONFIG.version : 'dev'}`;
+                    navigator.serviceWorker.register(swUrl)
+                        .then(reg => {
+                            if (reg.waiting) {
+                                showUpdateBanner(reg.waiting);
+                            }
+                            reg.addEventListener('updatefound', () => {
+                                const newWorker = reg.installing;
+                                if (newWorker) {
+                                    newWorker.addEventListener('statechange', () => {
+                                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                            showUpdateBanner(newWorker);
+                                        }
+                                    });
+                                }
+                            });
+                        })
+                        .catch(() => {});
+                });
+            }
+        }
+
+        function showUpdateBanner(worker) {
+            const banner = document.getElementById('sw-update-banner');
+            const btn = document.getElementById('sw-reload-btn');
+            banner.style.display = 'flex';
+            btn.onclick = () => {
+                worker.postMessage({ type: 'SKIP_WAITING' });
+                if (navigator.vibrate) { navigator.vibrate(10); }
+            };
+            navigator.serviceWorker.addEventListener('controllerchange', () => {
+                window.location.reload();
+            });
+        }
     </script>
 </body>
 </html>
