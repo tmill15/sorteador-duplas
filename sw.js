@@ -17,7 +17,7 @@ self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
   );
-  self.skipWaiting();
+  // Não chamar skipWaiting aqui para permitir fluxo de update controlado
 });
 
 self.addEventListener('activate', (event) => {

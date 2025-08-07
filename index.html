@@ -856,7 +856,7 @@
     </div>
 
     <!-- Banner de atualização do SW -->
-    <div id="sw-update-banner" style="display:none; position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); left: 50%; transform: translateX(-50%); background: var(--card-bg); color: var(--text-primary); border: 2px solid var(--border-light); box-shadow: 0 8px 16px var(--shadow-color); padding: 10px 14px; border-radius: 999px; z-index: 1000; display: flex; gap: 10px; align-items: center;">
+    <div id="sw-update-banner" style="display:none; position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); left: 50%; transform: translateX(-50%); background: var(--card-bg); color: var(--text-primary); border: 2px solid var(--border-light); box-shadow: 0 8px 16px var(--shadow-color); padding: 10px 14px; border-radius: 999px; z-index: 1000; gap: 10px; align-items: center;">
         <span style="font-weight: 600;">App atualizado</span>
         <button id="sw-reload-btn" class="btn btn-primary" style="padding: 8px 12px;">Recarregar</button>
     </div>
@@ -1704,12 +1704,21 @@
             const btn = document.getElementById('sw-reload-btn');
             banner.style.display = 'flex';
             btn.onclick = () => {
-                worker.postMessage({ type: 'SKIP_WAITING' });
+                try { worker.postMessage({ type: 'SKIP_WAITING' }); } catch (e) {}
                 if (navigator.vibrate) { navigator.vibrate(10); }
+                // Fallback: se o controller não mudar em 2s, força reload
+                setTimeout(() => { if (navigator.serviceWorker.controller) window.location.reload(); }, 2000);
             };
             navigator.serviceWorker.addEventListener('controllerchange', () => {
                 window.location.reload();
             });
+            try {
+                worker.addEventListener('statechange', () => {
+                    if (worker.state === 'activated') {
+                        window.location.reload();
+                    }
+                });
+            } catch (e) {}
         }
     </script>
 </body>
