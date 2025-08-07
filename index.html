@@ -356,6 +356,10 @@
         .participant-name {
             font-weight: 500;
             color: var(--text-primary);
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .results-section {
@@ -645,6 +649,38 @@
                 width: 100%;
                 justify-content: center;
             }
+        }
+
+        /* Ajustes extras para telas pequenas (ex.: iPhone 12 mini, 360-420px) */
+        @media (max-width: 420px) {
+            body { padding: 12px; }
+            .header { padding: 20px; }
+            .header h1 { font-size: 1.6rem; }
+            .header p { font-size: 0.95rem; }
+
+            .tab { padding: 12px 10px; gap: 6px; font-size: 0.95rem; }
+            .tab-content { padding: 16px; }
+
+            .stat-card { padding: 16px; }
+            .stat-number { font-size: 1.6rem; }
+
+            .btn-success { font-size: 1rem; padding: 12px 16px; }
+
+            .current-match { padding: 20px; }
+            .match-details { gap: 12px; }
+            .vs { font-size: 1.6rem; }
+
+            .participant-item { padding: 10px 12px; }
+            .participant-actions .btn { width: 36px; height: 28px; min-width: 36px; }
+
+            /* Evitar overflow horizontal na grade de sorteados */
+            .drawn-participants { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 360px) {
+            .tab { padding: 10px 8px; font-size: 0.9rem; }
+            .stat-card { padding: 14px; }
+            .stat-number { font-size: 1.5rem; }
         }
     </style>
 </head>
