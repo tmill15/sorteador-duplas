@@ -1,7 +1,7 @@
 /* Service Worker - Sorteador de Duplas */
 
 // Versão do cache baseada na query (?v=) definida no registro do SW
-const CACHE_VERSION = new URL(self.location).searchParams.get('v') || '0.2.11';
+const CACHE_VERSION = new URL(self.location).searchParams.get('v') || '0.2.12';
 const CACHE_NAME = `sorteador-cache-v${CACHE_VERSION}`;
 
 // Arquivos essenciais (app shell)

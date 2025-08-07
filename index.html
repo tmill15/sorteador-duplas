@@ -957,7 +957,8 @@
             // Checar ao retornar ao app
             document.addEventListener('visibilitychange', () => { if (!document.hidden) checkForSWUpdate(); });
             // Botão manual
-            document.getElementById('check-update-btn').addEventListener('click', checkForSWUpdate);
+            const checkBtn = document.getElementById('check-update-btn');
+            checkBtn.addEventListener('click', () => checkForSWUpdate(true));
         });
 
         function switchTab(tabName) {
@@ -1725,14 +1726,41 @@
         }
 
         // Força verificação de update do SW
-        function checkForSWUpdate() {
+        function checkForSWUpdate(isManual = false) {
             if (!('serviceWorker' in navigator)) return;
-            navigator.serviceWorker.getRegistration().then(reg => {
+            const btn = document.getElementById('check-update-btn');
+            const setChecking = (checking) => {
+                if (!btn) return;
+                if (checking) {
+                    btn.disabled = true;
+                    btn.innerHTML = '<i data-lucide="loader-2"></i> Verificando...';
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i data-lucide="refresh-cw"></i> Verificar atualização';
+                    if (typeof lucide !== 'undefined') { lucide.createIcons(); }
+                }
+            };
+
+            if (isManual) setChecking(true);
+
+            navigator.serviceWorker.getRegistration().then(async reg => {
                 if (!reg) return;
                 let updateShown = false;
                 const maybeShowNoUpdate = () => {
-                    if (!updateShown) showNoUpdateBanner();
+                    if (!updateShown) {
+                        showNoUpdateBanner();
+                        if (isManual) {
+                            // Fallback de alerta manual para evidenciar ação ao usuário
+                            try { alert('Nenhuma atualização disponível no momento.'); } catch (e) {}
+                        }
+                    }
                 };
+
+                // Força download do SW com no-store para evitar cache agressivo do iOS
+                try {
+                    const version = (window.APP_CONFIG && window.APP_CONFIG.version) ? window.APP_CONFIG.version : 'dev';
+                    await fetch(`sw.js?v=${version}`, { cache: 'no-store' });
+                } catch (e) {}
 
                 reg.update();
                 if (reg.waiting) {
@@ -1758,6 +1786,8 @@
                         maybeShowNoUpdate();
                     }, 1800);
                 }
+
+                setTimeout(() => setChecking(false), 2200);
             });
         }
 

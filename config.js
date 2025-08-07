@@ -1,6 +1,6 @@
 // Configuração do aplicativo Sorteador de Duplas
 const APP_CONFIG = {
-    version: "0.2.11",
+    version: "0.2.12",
     name: "Sorteador de Duplas",
     description: "Beach Tennis",
     author: "Thiago Milhomem",
