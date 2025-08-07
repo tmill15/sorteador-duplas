@@ -16,6 +16,9 @@ Best practices, coding standards, and development workflow guidelines for mainta
 ### ⚙️ [Feature Specifications](./feature-specifications.md)
 Comprehensive specifications for all application features, including core functionality, UI/UX requirements, and future enhancements.
 
+### 🚀 [Procedimentos de Build](./build-procedures.md)
+Passo a passo para releases e instrução gatilho “preparar build”.
+
 ## Purpose
 
 The Memory Bank serves as a centralized knowledge repository that:
