@@ -11,6 +11,13 @@ Quando eu receber a instrução “preparar build”, devo executar os passos ab
    - O SW é versionado no nome do arquivo: `sw-X.Y.Z.js`.
    - No `index.html`, o registro usa `sw-${APP_CONFIG.version}.js`.
    - Publique sempre um novo arquivo de SW por versão para contornar cache de CDN/Pages.
+   - Mantenha `sw.js` como compatibilidade, importando a última versão:
+     ```js
+     // sw.js
+     importScripts('sw-X.Y.Z.js');
+     ```
+     Atualize essa linha em cada "preparar build".
+   - Limpeza: após publicar, remova os arquivos `sw-*.js` antigos e mantenha SOMENTE o arquivo `sw-${APP_CONFIG.version}.js` atual (além do `sw.js` compat). Isso evita acúmulo de versões e reduz chance de servir SW desatualizado via CDN.
 3. Atualizar exibição de versão no app
    - A versão é carregada de `APP_CONFIG.version` e exibida no rodapé via `index.html`.
 4. Conferir PWA/manifesto (manual, se aplicável)

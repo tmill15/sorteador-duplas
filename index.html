@@ -861,17 +861,10 @@
         <button id="sw-reload-btn" class="btn btn-primary" style="padding: 8px 12px;">Recarregar</button>
     </div>
 
-    <!-- Banner de "nenhuma atualização" -->
-    <div id="sw-no-update-banner" style="display:none; position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 60px); left: 50%; transform: translateX(-50%); background: var(--card-bg); color: var(--text-primary); border: 2px solid var(--border-light); box-shadow: 0 8px 16px var(--shadow-color); padding: 8px 12px; border-radius: 999px; z-index: 999; font-weight:600;">
-        Nenhuma atualização disponível
-    </div>
 
     <!-- Rodapé com informações da versão -->
     <footer style="text-align: center; padding: 20px; color: var(--text-secondary); font-size: 0.85rem; opacity: 0.7; display:flex; flex-direction:column; gap:8px; align-items:center;">
         <div>Versão: <code id="version-info" style="background: var(--bg-light); padding: 2px 6px; border-radius: 4px; font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;">carregando...</code></div>
-        <button id="check-update-btn" class="btn btn-secondary" style="padding:6px 10px; font-size:0.85rem;">
-            <i data-lucide="refresh-cw"></i> Verificar atualização
-        </button>
     </footer>
 
     <script>
@@ -956,9 +949,6 @@
             setTimeout(checkForSWUpdate, 1500);
             // Checar ao retornar ao app
             document.addEventListener('visibilitychange', () => { if (!document.hidden) checkForSWUpdate(); });
-            // Botão manual
-            const checkBtn = document.getElementById('check-update-btn');
-            checkBtn.addEventListener('click', () => checkForSWUpdate(true));
         });
 
         function switchTab(tabName) {
@@ -1725,36 +1715,11 @@
             });
         }
 
-        // Força verificação de update do SW
-        function checkForSWUpdate(isManual = false) {
+        // Verificação passiva de update do SW
+        function checkForSWUpdate() {
             if (!('serviceWorker' in navigator)) return;
-            const btn = document.getElementById('check-update-btn');
-            const setChecking = (checking) => {
-                if (!btn) return;
-                if (checking) {
-                    btn.disabled = true;
-                    btn.innerHTML = '<i data-lucide="loader-2"></i> Verificando...';
-                } else {
-                    btn.disabled = false;
-                    btn.innerHTML = '<i data-lucide="refresh-cw"></i> Verificar atualização';
-                    if (typeof lucide !== 'undefined') { lucide.createIcons(); }
-                }
-            };
-
-            if (isManual) setChecking(true);
-
             navigator.serviceWorker.getRegistration().then(async reg => {
                 if (!reg) return;
-                let updateShown = false;
-                const maybeShowNoUpdate = () => {
-                    if (!updateShown) {
-                        showNoUpdateBanner();
-                        if (isManual) {
-                            // Fallback de alerta manual para evidenciar ação ao usuário
-                            try { alert('Nenhuma atualização disponível no momento.'); } catch (e) {}
-                        }
-                    }
-                };
 
                 // Força download do SW com no-store para evitar cache agressivo do iOS
                 try {
@@ -1764,38 +1729,16 @@
 
                 reg.update();
                 if (reg.waiting) {
-                    updateShown = true;
                     showUpdateBanner(reg.waiting);
                 } else if (reg.installing) {
                     const w = reg.installing;
                     w.addEventListener('statechange', () => {
                         if (w.state === 'installed' && navigator.serviceWorker.controller) {
-                            updateShown = true;
                             showUpdateBanner(w);
                         }
                     });
-                    setTimeout(maybeShowNoUpdate, 2000);
-                } else {
-                    // Não há installing/waiting agora; aguarda curto período
-                    setTimeout(async () => {
-                        const latest = await navigator.serviceWorker.getRegistration();
-                        if (latest && (latest.waiting || latest.installing)) {
-                            // outro caminho já mostrou o banner
-                            return;
-                        }
-                        maybeShowNoUpdate();
-                    }, 1800);
                 }
-
-                setTimeout(() => setChecking(false), 2200);
             });
-        }
-
-        function showNoUpdateBanner() {
-            const el = document.getElementById('sw-no-update-banner');
-            el.style.display = 'block';
-            if (navigator.vibrate) { navigator.vibrate(5); }
-            setTimeout(() => { el.style.display = 'none'; }, 2500);
         }
 
         function showUpdateBanner(worker) {
